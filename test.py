@@ -8,32 +8,28 @@ class TreeNode:
 
 from collections import deque
 class Solution:
-    def maxSlidingWindow(self, nums, k):
-        if not nums or not k:
-            return []
+    def lengthOfLongestSubstring(self, s):
+        if not s:
+            return 0
+        left, right, longest = 0, 0, 0
+        n = len(s)
 
-        dq = deque([])
-        for i in range(k - 1):
-            self.push(dq, nums, i)
+        unique_char = {}
+        while right < n:
+            if s[right] in unique_char:
+                # 下面两行是错误的，left只有在unique_char[s[right] 在窗口里（unique_dict[s[j]] >= i)
+                # 才需要+1
+                # left = max(left, unique_char[s[right]])
+                # left += 1
+                left = max(left, unique_char[s[right]])
+            longest = max(longest, right - left + 1)
+            unique_char[s[right]] = right + 1
+            right += 1
+        return longest
 
-        result = []
-        for i in range(k - 1, len(nums)):
-            self.push(dq, nums, i)
-            result.append(nums[dq[0]])
-            if dq[0] == i - k + 1:
-                dq.popleft()
-
-        return result
-
-    def push(self, dq, nums, i):
-        while dq and nums[dq[-1]] < nums[i]:
-            dq.pop()
-        dq.append(i)
-
-nums = [4,2,3,5,6,3]
-k = 3
+s = "abcb"
 sol = Solution()
-print(sol.maxSlidingWindow(nums, k))
+print(sol.lengthOfLongestSubstring(s))
 
 # root = TreeNode(1)
 # root.left = TreeNode(-5)
